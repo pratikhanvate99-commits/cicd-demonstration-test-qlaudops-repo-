@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qlaudops-config
+  namespace: qlaudops
+data:
+  LOG_LEVEL: INFO
+  CORS_ORIGINS: "http://localhost:8000"

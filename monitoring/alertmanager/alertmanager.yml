@@ -1,0 +1,10 @@
+route:
+  receiver: default
+  group_by: [alertname, severity]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+receivers:
+  - name: default
+    # Configure an authenticated email, Slack, or PagerDuty receiver before use.
+    # No notification credentials are included in this example.

@@ -1,0 +1,19 @@
+groups:
+  - name: qlaudops-service-health
+    rules:
+      - alert: QlaudOpsApiUnavailable
+        expr: up{job="qlaudops-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: QlaudOps API is not reachable
+          description: Prometheus has failed to scrape the QlaudOps API for two minutes.
+      - alert: QlaudOpsHighRequestLatency
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: QlaudOps API p95 latency is elevated
+          description: The API p95 request latency has exceeded 500ms for five minutes.

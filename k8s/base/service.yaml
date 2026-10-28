@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: qlaudops
+  namespace: qlaudops
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: qlaudops
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

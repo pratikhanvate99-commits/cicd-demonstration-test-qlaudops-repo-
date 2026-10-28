@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qlaudops
+  labels:
+    app.kubernetes.io/part-of: qlaudops
+    pod-security.kubernetes.io/enforce: restricted
