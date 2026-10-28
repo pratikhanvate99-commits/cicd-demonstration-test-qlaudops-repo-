@@ -10,7 +10,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8000
 WORKDIR /app
 RUN addgroup --system --gid 10001 qlaudops && adduser --system --uid 10001 --ingroup qlaudops --no-create-home qlaudops
 COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir --upgrade setuptools wheel \
+    && python -m pip install --no-cache-dir -r requirements.txt
 COPY backend/app ./app
 COPY --from=frontend-build /workspace/frontend/dist ./static
 USER 10001:10001
