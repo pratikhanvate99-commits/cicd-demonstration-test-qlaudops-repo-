@@ -53,11 +53,13 @@ jobs:
       - run: terraform fmt -check -recursive terraform
       - run: terraform -chdir=terraform/environments/demo init -backend=false -input=false
       - run: terraform -chdir=terraform/environments/demo validate
-      - uses: azure/k8s-lint@v1
+      - uses: azure/setup-kubectl@v5
         with:
-          manifests: |
-            k8s/base/*.yaml
-            k8s/overlays/development/*.yaml
+          version: v1.34.0
+      - name: Render development manifests
+        run: kubectl kustomize k8s/overlays/development > "$RUNNER_TEMP/qlaudops-manifests.yaml"
+      - name: Validate rendered Kubernetes manifests
+        run: docker run --rm -v "$RUNNER_TEMP/qlaudops-manifests.yaml:/manifests.yaml:ro" ghcr.io/yannh/kubeconform:v0.8.0 -strict -summary /manifests.yaml
 
   image:
     runs-on: ubuntu-latest
@@ -73,7 +75,7 @@ jobs:
           tags: qlaudops:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@0.36.0
         with:
           image-ref: qlaudops:${{ github.sha }}
           format: table
